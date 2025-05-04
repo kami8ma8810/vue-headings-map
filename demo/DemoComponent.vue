@@ -24,6 +24,19 @@
       </div>
     </div>
     
+    <!-- Child Component Integration -->
+    <div class="section">
+      <h2>Nested Components</h2>
+      <p>This demonstrates how the extension handles headings in nested child components.</p>
+      
+      <ChildComponent>
+        <p>Content passed to the child component through slots.</p>
+      </ChildComponent>
+      
+      <h3>Parent Component Continues</h3>
+      <p>After the child component, the parent component can continue with its own heading structure.</p>
+    </div>
+    
     <div class="section">
       <h2>Benefits of Structured Headings</h2>
       <p>Properly structured headings improve accessibility and SEO.</p>
@@ -38,8 +51,13 @@
 </template>
 
 <script>
+import ChildComponent from './ChildComponent.vue';
+
 export default {
   name: 'DemoComponent',
+  components: {
+    ChildComponent
+  },
   data() {
     return {
       title: 'Headings Demo'
