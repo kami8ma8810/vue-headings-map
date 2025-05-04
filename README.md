@@ -29,6 +29,8 @@ The repository includes several Vue demo components that showcase how VueHeading
 - `demo/GrandchildComponent.vue`: Shows deeply nested component headings
 - `demo/ParentWithChildren.vue`: Parent component with child components
 - `demo/ComplexParentComponent.vue`: Complex structure with multiple children and grandchildren
+- `demo/DynamicHeading.vue`: Component that renders dynamic heading levels using `:is`
+- `demo/DynamicHeadingDemo.vue`: Demonstrates usage of dynamic heading components
 
 These demo files can be used to test the extension and see how it visualizes heading structures across component boundaries.
 

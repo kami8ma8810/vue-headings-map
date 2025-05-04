@@ -27,6 +27,8 @@ VueHeadingsMapは、Vueプロジェクト内の見出し構造を可視化する
 - `demo/GrandchildComponent.vue`: 深くネストされたコンポーネントの見出しを表示
 - `demo/ParentWithChildren.vue`: 子コンポーネントを持つ親コンポーネント
 - `demo/ComplexParentComponent.vue`: 複数の子コンポーネントと孫コンポーネントを持つ複雑な構造
+- `demo/DynamicHeading.vue`: `:is`を使用して動的な見出しレベルをレンダリングするコンポーネント
+- `demo/DynamicHeadingDemo.vue`: 動的見出しコンポーネントの使用例を示すデモ
 
 これらのデモファイルを使用して拡張機能をテストし、コンポーネント間の見出し構造をどのように可視化するかを確認できます。
 

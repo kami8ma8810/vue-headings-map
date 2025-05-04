@@ -34,11 +34,11 @@ function getLineOffset(content: string, index: number): number {
 // テンプレート内の見出し要素を抽出
 function extractHeadings(template: string, lineOffset: number): HeadingNode[] {
   const headings: HeadingNode[] = [];
+  let lastLevel = 0;
   
-  // テンプレート内の見出しタグを正規表現で検索
+  // 1. 通常の見出しタグを検索
   const headingRegex = /<h([1-6])(?:\s+[^>]*)?>([\s\S]*?)<\/h\1>/g;
   let match;
-  let lastLevel = 0;
   
   while ((match = headingRegex.exec(template)) !== null) {
     const level = parseInt(match[1], 10);
@@ -68,6 +68,42 @@ function extractHeadings(template: string, lineOffset: number): HeadingNode[] {
     });
     
     lastLevel = level;
+  }
+  
+  // 2. 動的コンポーネントを検索 (<component :is="hN"> or <component :is="`h${N}`"> パターン)
+  const dynamicComponentRegex = /<component\s+:is=["'`]h([1-6])["'`]|<component\s+:is=["'`]h\$\{(\d+)\}["'`]|:headingLevel=["'](\d+)["']/g;
+  while ((match = dynamicComponentRegex.exec(template)) !== null) {
+    // マッチしたグループから数値を取得（実際の見出しレベル）
+    const level = parseInt(match[1] || match[2] || match[3], 10);
+    
+    if (level >= 1 && level <= 6) {
+      // 行番号と列の計算は通常の見出しと同様
+      const beforeMatch = template.substring(0, match.index);
+      const line = lineOffset + beforeMatch.split('\n').length - 1;
+      const lastNewline = beforeMatch.lastIndexOf('\n');
+      const column = lastNewline >= 0 ? match.index - lastNewline - 1 : match.index;
+      
+      // 見出しの内容を抽出するため、終了タグを探す
+      // ここでは単純化のため、「Dynamic Component」という固定テキストを使用
+      const content = "Dynamic Component";
+      
+      // 見出しレベルの妥当性をチェック
+      const hasWarning = checkHeadingLevelValidity(level, lastLevel);
+      const warningMessage = hasWarning ? 
+        `Heading level skipped from h${lastLevel} to h${level}` : 
+        undefined;
+      
+      headings.push({
+        level,
+        content,
+        line,
+        column,
+        hasWarning,
+        warningMessage
+      });
+      
+      lastLevel = level;
+    }
   }
   
   return headings;
