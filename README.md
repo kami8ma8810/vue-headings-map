@@ -27,6 +27,19 @@ VueHeadingsMap is a VSCode/Cursor extension to visualize heading structure in Vu
 4. Click on a heading to navigate to its position in the corresponding file
 5. Headings with a warning icon (⚠️) indicate improper heading level hierarchy
 
+## Configuration
+
+You can customize the extension's behavior through VSCode settings:
+
+1. Open VSCode Settings (File > Preferences > Settings)
+2. Search for "Vue Headings Map"
+3. Configure the following options:
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `vueHeadingsMap.requireH1AsFirstHeading` | Require that the first heading in a file is an h1. When disabled, you can start with any heading level without warnings. | `true` |
+| `vueHeadingsMap.warnOnHeadingLevelSkip` | Show warnings when heading levels are skipped (e.g., h2 followed by h4). | `true` |
+
 ## Demo
 
 The repository includes several Vue demo components that showcase how VueHeadingsMap handles different component structures:

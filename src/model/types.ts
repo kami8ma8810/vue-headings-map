@@ -19,12 +19,21 @@ export interface HeadingNode {
   
   // 警告メッセージ
   warningMessage?: string;
+  
+  // 子見出しノード
+  children?: HeadingNode[];
+  
+  // 親見出しノードへの参照
+  parent?: HeadingNode;
 }
 
 // ツリービュー項目の拡張クラス
 export class HeadingItem extends vscode.TreeItem {
   // ファイルパス（ファイル項目の場合）
   filePath?: string;
+  
+  // 見出しノードへの参照（見出し項目の場合）
+  headingNode?: HeadingNode;
   
   // 追加のプロパティを定義して、TypeScript エラーを解決
   tooltip?: string;
@@ -36,6 +45,8 @@ export class HeadingItem extends vscode.TreeItem {
     public readonly options?: {
       tooltip?: string;
       description?: string;
+      filePath?: string;
+      headingNode?: HeadingNode;
     }
   ) {
     super(label, collapsibleState);
@@ -46,6 +57,12 @@ export class HeadingItem extends vscode.TreeItem {
       }
       if (options.description) {
         this.description = options.description;
+      }
+      if (options.filePath) {
+        this.filePath = options.filePath;
+      }
+      if (options.headingNode) {
+        this.headingNode = options.headingNode;
       }
     }
   }

@@ -14,6 +14,21 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Vue Headings Map",
+      "properties": {
+        "vueHeadingsMap.requireH1AsFirstHeading": {
+          "type": "boolean",
+          "default": true,
+          "description": "最初の見出しがh1である必要があるかどうか。falseの場合、h2などから始めることも許可します。"
+        },
+        "vueHeadingsMap.warnOnHeadingLevelSkip": {
+          "type": "boolean",
+          "default": true,
+          "description": "見出しレベルのスキップ（例：h2の後にh4）を警告するかどうか"
+        }
+      }
+    },
     "commands": [
       {
         "command": "vueHeadingsMap.refreshHeadings",

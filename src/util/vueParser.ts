@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { HeadingNode } from '../model/types';
+import { SettingsManager } from '../model/settings';
 // VSCodeの型定義は既にimportされているので追加は不要
 
 /**
@@ -72,28 +73,32 @@ function extractHeadingsFromTemplate(template: string, lineOffset: number): Head
   
   // 2. 動的コンポーネントのパターン検索
   
-  // 2.1 <component :is="..."> パターン
-  const dynamicComponentRegex = /<component\s+:is=["'`]h([1-6])["'`]|<component\s+:is=["'`]h\$\{(\d+)\}["'`]|<component\s+:is=["'`]([a-zA-Z0-9_$]+)["'`]|:is=["'`]([a-zA-Z0-9_$]+)["'`]/g;
+  // 2.1 <component :is="..."> パターン - 明示的にh1-h6に関連するリテラル文字列のみを検出
+  // シングルクォートかダブルクォートを使った文字列リテラルのみにマッチするパターン
+  // `:is="h1"` や `:is='h2'` のような文字列リテラルのみを検出
+  const hTagPattern = 'h[1-6]';
+  const dynamicComponentRegex = new RegExp(`<component\\s+:is=["']${hTagPattern}["']|<component\\s+:is=["']${hTagPattern}\\$\\{(\\d+)\\}["']`, 'g');
+  
+  // 変数名や式は実行時まで値が不明なため検出しない
+  // 例: :is="selectedComponent" や :is="content" のようなものは検出しない
+  
   while ((match = dynamicComponentRegex.exec(template)) !== null) {
-    // 直接数値が指定されたケース
-    const directLevel = parseInt(match[1] || match[2], 10);
+    // キャプチャグループを確認
+    const headingText = match[0];
+    // h1-h6を抽出
+    const headingMatch = headingText.match(/h([1-6])/);
     
-    if (directLevel >= 1 && directLevel <= 6) {
-      const hasWarning = checkHeadingLevelValidity(directLevel, lastLevel);
-      const warningMessage = hasWarning ? 
-        `Heading level skipped from h${lastLevel} to h${directLevel}` : 
-        undefined;
-      
-      addHeadingNode(headings, directLevel, "Dynamic Component", template, match.index, lineOffset, lastLevel, hasWarning, warningMessage);
-      lastLevel = directLevel;
-      continue;
-    }
-    
-    // 変数名が使われているケースは検出だけする
-    const varName = match[3] || match[4];
-    if (varName) {
-      // 実際のレベルは不明ですが、動的コンポーネントとして検出
-      addHeadingNode(headings, 1, `Dynamic Component (${varName})`, template, match.index, lineOffset, lastLevel, true);
+    if (headingMatch && headingMatch[1]) {
+      const level = parseInt(headingMatch[1], 10);
+      if (level >= 1 && level <= 6) {
+        const hasWarning = checkHeadingLevelValidity(level, lastLevel);
+        const warningMessage = hasWarning ? 
+          `Heading level skipped from h${lastLevel} to h${level}` : 
+          undefined;
+        
+        addHeadingNode(headings, level, "Dynamic Component", template, match.index, lineOffset, lastLevel, hasWarning, warningMessage);
+        lastLevel = level;
+      }
     }
   }
   
@@ -256,13 +261,15 @@ function addHeadingNode(
  * 見出しレベルの妥当性をチェック
  */
 function checkHeadingLevelValidity(currentLevel: number, lastLevel: number): boolean {
-  // 最初の見出しはh1であるべき
-  if (lastLevel === 0 && currentLevel !== 1) {
+  const settings = SettingsManager.getInstance().getSettings();
+  
+  // 最初の見出しはh1であるべき（設定に基づいて判断）
+  if (lastLevel === 0 && currentLevel !== 1 && settings.requireH1AsFirstHeading) {
     return true;
   }
   
-  // レベルのスキップをチェック（例：h2の後にh4）
-  if (lastLevel > 0 && currentLevel > lastLevel + 1) {
+  // レベルのスキップをチェック（例：h2の後にh4）（設定に基づいて判断）
+  if (lastLevel > 0 && currentLevel > lastLevel + 1 && settings.warnOnHeadingLevelSkip) {
     return true;
   }
   

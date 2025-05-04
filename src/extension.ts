@@ -1,9 +1,14 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 import { HeadingsTreeProvider } from './view/headingsTreeProvider';
+import { SettingsManager } from './model/settings';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('VueHeadingsMap is now active!');
 
+  // 設定マネージャーの初期化（アプリケーション全体で使用できるようにする）
+  SettingsManager.getInstance();
+  
   // ヘッディングツリープロバイダーのインスタンスを作成
   const headingsTreeProvider = new HeadingsTreeProvider();
   
@@ -11,6 +16,32 @@ export function activate(context: vscode.ExtensionContext) {
   const treeView = vscode.window.createTreeView('vueHeadingsMapExplorer', {
     treeDataProvider: headingsTreeProvider,
     showCollapseAll: true
+  });
+  
+  // ファイル変更イベントの監視を設定
+  const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.vue');
+  
+  // ファイルが変更された時のイベントハンドラ
+  fileWatcher.onDidChange(uri => {
+    headingsTreeProvider.refreshFile(uri.fsPath);
+  });
+  
+  // ファイルが作成された時のイベントハンドラ
+  fileWatcher.onDidCreate(uri => {
+    headingsTreeProvider.refreshFile(uri.fsPath);
+  });
+  
+  // ファイルが削除された時のイベントハンドラ
+  fileWatcher.onDidDelete(uri => {
+    headingsTreeProvider.removeFile(uri.fsPath);
+  });
+  
+  // エディタ内容の変更を監視
+  vscode.workspace.onDidChangeTextDocument(event => {
+    // Vueファイルか確認
+    if (path.extname(event.document.fileName) === '.vue') {
+      headingsTreeProvider.refreshFile(event.document.fileName);
+    }
   });
   
   // コマンドを登録
@@ -50,4 +81,10 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-export function deactivate() {}
+/**
+ * この拡張機能は特別なクリーンアップを必要としないため、
+ * deactivate関数は空のままです。
+ */
+export function deactivate() {
+  // 拡張機能のシャットダウン時に必要な処理がない
+}
