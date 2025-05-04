@@ -1,48 +1,50 @@
 # VueHeadingsMap
 
-VueHeadingsMapは、Vueプロジェクト内の見出し構造を可視化するためのVSCode/Cursor拡張機能です。
+VueHeadingsMap is a VSCode/Cursor extension to visualize heading structure in Vue projects.
 
-## 特徴
+[日本語のREADME](README.ja.md)
 
-- Vueファイル内の見出し要素（h1-h6）を抽出してツリー表示
-- 不適切な見出しレベル（h2の次にh4など）を警告としてハイライト
-- 特定ディレクトリをベースとした見出し構造の表示
-- 見出しをクリックして対象の位置に移動
+## Features
 
-## 使い方
+- Extract and display heading elements (h1-h6) from Vue files in a tree view
+- Highlight improper heading levels (e.g., h2 followed by h4) as warnings
+- View heading structure based on specific directories
+- Navigate to the target location by clicking on a heading
 
-1. VSCodeのサイドバーに表示される「VueHeadingsMap Explorer」アイコンをクリック
-2. 自動的にプロジェクトの `src` ディレクトリ内のVueファイルが解析され、見出し構造が表示されます
-3. 別のディレクトリを基準にしたい場合は、ツリービューのヘッダーにある「Set Base Directory」ボタンをクリック
-4. 見出しをクリックすると、対応するファイルの該当位置に移動します
-5. 警告アイコン（⚠️）が表示されている見出しは、見出しレベルの階層が不適切な箇所を示しています
+## Usage
 
-## 開発
+1. Click on the "VueHeadingsMap Explorer" icon in the VSCode sidebar
+2. Vue files in the `src` directory are automatically analyzed and their heading structure is displayed
+3. To use a different base directory, click the "Set Base Directory" button in the tree view header
+4. Click on a heading to navigate to its position in the corresponding file
+5. Headings with a warning icon (⚠️) indicate improper heading level hierarchy
 
-### 前提条件
+## Development
 
-- Node.js 
+### Prerequisites
+
+- Node.js
 - npm/yarn
 
-### セットアップ
+### Setup
 
 ```bash
-# 依存パッケージのインストール
+# Install dependencies
 npm install
 
-# 開発モードでの実行
+# Run in development mode
 npm run watch
 
-# F5キーで新しいVSCodeウィンドウでデバッグ実行
+# Debug in a new VSCode window with F5 key
 ```
 
-### ビルド
+### Build
 
 ```bash
-# 拡張機能のパッケージング
+# Package the extension
 npm run vscode:prepublish
 ```
 
-## ライセンス
+## License
 
 MIT
