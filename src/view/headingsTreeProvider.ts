@@ -69,7 +69,7 @@ export class HeadingsTreeProvider implements vscode.TreeDataProvider<HeadingItem
     if (!element) {
       // ルートレベル：ファイルごとのアイテムを返す
       return Promise.resolve(this.createFileItems());
-    } else if (element.contextValue === 'file') {
+    } else if (element.contextValue === 'file' && element.filePath) {
       // ファイルレベル：そのファイル内の見出しアイテムを返す
       return Promise.resolve(this.createHeadingItems(element.filePath));
     }

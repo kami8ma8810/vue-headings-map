@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import * as path from 'path';
 import { HeadingNode } from '../model/types';
+// VSCodeの型定義は既にimportされているので追加は不要
 
 /**
  * Vueファイルを解析して見出し要素を抽出する
@@ -59,14 +59,6 @@ function extractHeadingsFromTemplate(template: string, lineOffset: number): Head
   while ((match = headingRegex.exec(template)) !== null) {
     const level = parseInt(match[1], 10);
     const content = cleanContent(match[2]);
-    
-    // 見出しの行番号を計算
-    const beforeMatch = template.substring(0, match.index);
-    const line = lineOffset + beforeMatch.split('\n').length - 1;
-    
-    // 行内の列位置を計算
-    const lastNewline = beforeMatch.lastIndexOf('\n');
-    const column = lastNewline >= 0 ? match.index - lastNewline - 1 : match.index;
     
     // 見出しレベルの妥当性をチェック
     const hasWarning = checkHeadingLevelValidity(level, lastLevel);
