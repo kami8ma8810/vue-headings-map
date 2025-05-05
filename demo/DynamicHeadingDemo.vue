@@ -38,7 +38,8 @@ const decrementLevel = () => {
 <template>
   <div class="dynamic-heading-demo">
     <h1>動的見出しコンポーネントのデモ</h1>
-    <p>これは<code>component :is</code>を使用して動的に見出しレベルを変更するコンポーネントのデモです。</p>
+    <p>これは動的に見出しレベルを変更するコンポーネントのデモです。</p>
+    <!-- TODO: component :is パターンは一時的に無効化されています -->
     
     <section class="demo-section">
       <h2>正しい階層の例</h2>

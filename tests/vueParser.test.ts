@@ -24,6 +24,12 @@ function checkHeadingLevelValidity(currentLevel: number, lastLevel: number): boo
     return true;
   }
   
+  // h2以降の見出しが登場した後にh1が来た場合の逆方向チェック
+  // 既にlastLevelが2以上（h2以降の見出しが既に出現）で、currentLevelが1（h1）の場合
+  if (lastLevel >= 2 && currentLevel === 1) {
+    return true;
+  }
+  
   // レベルのスキップをチェック（例：h2の後にh4）
   if (currentLevel > lastLevel + 1) {
     return true;
@@ -36,6 +42,18 @@ describe('見出しレベル検証ロジック', () => {
   test('h1より前にh2がある場合に警告が表示されること', () => {
     // h2の後にh1がくるパターン (例: <h2>タイトル</h2><h1>本題</h1>)
     const result = checkHeadingLevelValidity(1, 2);
+    expect(result).toBe(true);
+  });
+
+  test('h3の後にh1が来る場合に警告が表示されること', () => {
+    // h3の後にh1が来るパターン (例: <h3>サブセクション</h3><h1>タイトル</h1>)
+    const result = checkHeadingLevelValidity(1, 3);
+    expect(result).toBe(true);
+  });
+
+  test('h6の後にh1が来る場合に警告が表示されること', () => {
+    // h6の後にh1が来るパターン (例: <h6>最小セクション</h6><h1>タイトル</h1>)
+    const result = checkHeadingLevelValidity(1, 6);
     expect(result).toBe(true);
   });
 

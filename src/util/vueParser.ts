@@ -281,6 +281,12 @@ function checkHeadingLevelValidity(currentLevel: number, lastLevel: number): boo
     return true;
   }
   
+  // h2以降の見出しが登場した後にh1が来た場合の逆方向チェック
+  // 既にlastLevelが2以上（h2以降の見出しが既に出現）で、currentLevelが1（h1）の場合
+  if (lastLevel >= 2 && currentLevel === 1) {
+    return true;
+  }
+  
   // レベルのスキップをチェック（例：h2の後にh4）（設定に基づいて判断）
   if (currentLevel > lastLevel + 1 && settings.warnOnHeadingLevelSkip) {
     return true;
