@@ -73,6 +73,7 @@ function extractHeadingsFromTemplate(template: string, lineOffset: number): Head
   
   // 2. 動的コンポーネントのパターン検索
   
+  /* 
   // 2.1 <component :is="..."> パターン - 明示的にh1-h6に関連するリテラル文字列のみを検出
   // シングルクォートかダブルクォートを使った文字列リテラルのみにマッチするパターン
   // `:is="h1"` や `:is='h2'` のような文字列リテラルのみを検出
@@ -101,6 +102,7 @@ function extractHeadingsFromTemplate(template: string, lineOffset: number): Head
       }
     }
   }
+  */
   
   // 2.2 headingLevel 属性パターン
   const headingLevelRegex = /:headingLevel=["'](\d+)["']|headingLevel=["'](\d+)["']/g;
@@ -263,13 +265,24 @@ function addHeadingNode(
 function checkHeadingLevelValidity(currentLevel: number, lastLevel: number): boolean {
   const settings = SettingsManager.getInstance().getSettings();
   
-  // 最初の見出しはh1であるべき（設定に基づいて判断）
-  if (lastLevel === 0 && currentLevel !== 1 && settings.requireH1AsFirstHeading) {
+  // 初めての見出しの場合
+  if (lastLevel === 0) {
+    // 最初の見出しがh1でなければ、設定に基づいて警告
+    if (currentLevel !== 1 && settings.requireH1AsFirstHeading) {
+      return true;
+    }
+    return false; // 最初の見出しなので他の規則はチェックしない
+  }
+  
+  // h1より前にh2以下の見出しがある場合のチェック
+  // lastLevelが0より大きい（既に見出しがある）かつ
+  // currentLevelが1（h1）である場合、常に警告を表示（アクセシビリティ上の問題）
+  if (currentLevel === 1 && lastLevel > 1) {
     return true;
   }
   
   // レベルのスキップをチェック（例：h2の後にh4）（設定に基づいて判断）
-  if (lastLevel > 0 && currentLevel > lastLevel + 1 && settings.warnOnHeadingLevelSkip) {
+  if (currentLevel > lastLevel + 1 && settings.warnOnHeadingLevelSkip) {
     return true;
   }
   

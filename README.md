@@ -88,7 +88,13 @@ npm run vscode:prepublish
 
 ## Version History
 
-### 0.0.3 (Upcoming)
+### 0.0.4
+- Improved heading structure validation for accessibility
+- Enhanced warning system for h1 tags appearing after h2 tags
+- Optimized dynamic tag detection to focus on actual heading elements
+- Modified component resolution for better performance
+
+### 0.0.3
 - Modified VSCode engine requirements to support Cursor editor (v0.49.6+)
 - Lowered VSCode requirement from v1.99.1 to v1.60.0 for wider compatibility
 - Fixed type definitions to match new engine requirements

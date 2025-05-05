@@ -2,7 +2,7 @@
   "name": "vue-headings-map",
   "displayName": "VueHeadingsMap",
   "description": "Visualize heading structure in Vue projects",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "HayatoKamiya",
   "repository": {
     "type": "git",
