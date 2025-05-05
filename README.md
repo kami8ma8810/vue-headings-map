@@ -12,7 +12,6 @@ VueHeadingsMap is a VSCode/Cursor extension to visualize heading structure in Vu
 - Navigate to the target location by clicking on a heading
 - Support for complex component hierarchies, including nested child components
 - Detection of various dynamic heading patterns:
-  - `<component :is="...">`
   - `:headingLevel` props
   - JSX/TSX headings
   - Render functions with `h()` or `createElement()`
