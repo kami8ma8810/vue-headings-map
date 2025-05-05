@@ -2,9 +2,26 @@
   "name": "vue-headings-map",
   "displayName": "VueHeadingsMap",
   "description": "Visualize heading structure in Vue projects",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "publisher": "HayatoKamiya",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kami8ma8810/vue-headings-map"
+  },
+  "license": "MIT",
+  "icon": "resources/icon.png",
+  "keywords": [
+    "vue",
+    "headings",
+    "h1",
+    "h2",
+    "outline",
+    "accessibility",
+    "a11y",
+    "seo"
+  ],
   "engines": {
-    "vscode": "^1.70.0"
+    "vscode": "^1.99.1"
   },
   "categories": [
     "Other"
@@ -39,12 +56,12 @@
         "title": "Set Base Directory"
       }
     ],
-    "viewsContainers": {
+      "viewsContainers": {
       "activitybar": [
         {
           "id": "vueHeadingsMapExplorer",
           "title": "VueHeadingsMap Explorer",
-          "icon": "resources/headings-icon.svg"
+          "icon": "resources/icon.png"
         }
       ]
     },
@@ -77,7 +94,9 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

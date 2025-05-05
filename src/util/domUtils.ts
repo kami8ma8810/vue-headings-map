@@ -10,7 +10,7 @@
 export function findNodes(content: string | any, tagName: string): any[] {
   // 簡易実装：実際には parse5 などのパーサーを利用して正確に解析する
   if (typeof content === 'string') {
-    const regex = new RegExp(`<${tagName}[^>]*>(.*?)<\/${tagName}>`, 'g');
+    const regex = new RegExp(`<${tagName}[^>]*>(.*?)</${tagName}>`, 'g');
     const results: any[] = [];
     let match;
     
