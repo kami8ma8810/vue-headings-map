@@ -2,7 +2,7 @@
 
 VueHeadingsMap is a VSCode/Cursor extension to visualize heading structure in Vue projects.
 
-[日本語のREADME](README.ja.md)
+[日本語](README.ja.md)
 
 ## Features
 
