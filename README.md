@@ -86,6 +86,20 @@ npm run watch
 npm run vscode:prepublish
 ```
 
+## Version History
+
+### 0.0.3 (Upcoming)
+- Modified VSCode engine requirements to support Cursor editor (v0.49.6+)
+- Lowered VSCode requirement from v1.99.1 to v1.60.0 for wider compatibility
+- Fixed type definitions to match new engine requirements
+
+### 0.0.2
+- Update icon
+
+### 0.0.1
+- Initial development version
+- Basic heading extraction and visualization
+
 ## License
 
 MIT
