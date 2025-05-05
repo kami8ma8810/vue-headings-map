@@ -203,7 +203,6 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@types/bun@^1.2.12",
         "npm:@types/glob@^7.2.0",
         "npm:@types/mocha@^9.1.1",
         "npm:@types/node@^16.18.126",
@@ -211,7 +210,6 @@
         "npm:@typescript-eslint/eslint-plugin@^5.31.0",
         "npm:@typescript-eslint/parser@^5.31.0",
         "npm:@vscode/test-electron@^2.1.5",
-        "npm:bun@^1.2.12",
         "npm:eslint@^8.20.0",
         "npm:glob@^8.0.3",
         "npm:mocha@10",

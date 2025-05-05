@@ -87,6 +87,12 @@ npm run vscode:prepublish
 
 ## Version History
 
+### 0.0.5
+- Improved heading level validation to detect h1 tags appearing after any heading level (h2-h6)
+- Added comprehensive test suite for all dynamic heading patterns
+- Updated documentation to remove references to temporarily disabled features
+- Fixed component type definitions for better compatibility
+
 ### 0.0.4
 - Improved heading structure validation for accessibility
 - Enhanced warning system for h1 tags appearing after h2 tags

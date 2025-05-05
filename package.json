@@ -2,7 +2,7 @@
   "name": "vue-headings-map",
   "displayName": "VueHeadingsMap",
   "description": "Visualize heading structure in Vue projects",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "HayatoKamiya",
   "repository": {
     "type": "git",
@@ -100,7 +100,6 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.12",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "^16.18.126",
@@ -108,7 +107,6 @@
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
     "@vscode/test-electron": "^2.1.5",
-    "bun": "^1.2.12",
     "eslint": "^8.20.0",
     "glob": "^8.0.3",
     "mocha": "^10.0.0",
