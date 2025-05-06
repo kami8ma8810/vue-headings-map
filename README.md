@@ -8,6 +8,7 @@ VueHeadingsMap is a VSCode/Cursor extension to visualize heading structure in Vu
 
 - Extract and display heading elements (h1-h6) from Vue files in a tree view
 - Highlight improper heading levels (e.g., h2 followed by h4) as warnings
+- Warn on h2-h6 tags placed before h1 (accessibility issue)
 - View heading structure based on specific directories
 - Navigate to the target location by clicking on a heading
 - Support for complex component hierarchies, including nested child components
@@ -86,6 +87,10 @@ npm run vscode:prepublish
 ```
 
 ## Version History
+
+### 0.0.6
+- Enhanced heading level validation to show warnings on h2-h6 tags that appear before h1
+- Improved document structure validation for better accessibility guidance
 
 ### 0.0.5
 - Improved heading level validation to detect h1 tags appearing after any heading level (h2-h6)

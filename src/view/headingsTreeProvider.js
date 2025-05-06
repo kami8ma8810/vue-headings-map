@@ -252,6 +252,8 @@ class HeadingsTreeProvider {
             : vscode.TreeItemCollapsibleState.None;
         // この見出し自体または子孫に警告があるかチェック
         const directWarning = node.hasWarning;
+        // デバッグ用にログ出力
+        console.log(`Creating TreeItem for h${node.level} "${node.content}" hasWarning=${directWarning}, message="${node.warningMessage || 'none'}"`);
         const childrenHaveWarnings = hasChildren && node.children ? this.hasWarningsDeep(node.children) : false;
         const hasAnyWarnings = directWarning || childrenHaveWarnings;
         // 階層レベルに応じたインデントと視覚的なライン表現を追加
@@ -292,9 +294,15 @@ class HeadingsTreeProvider {
             title: 'Go to Heading',
             arguments: [filePath, node.line]
         };
-        // 見出しレベルに基づいてアイコンとスタイルを設定
-        if (hasAnyWarnings) {
-            // 直接または子孫に警告がある場合は警告アイコン
+        // 警告状態を明示的にマーク
+        if (directWarning) {
+            // このノード自体に警告がある場合に特別なマーキング
+            console.log(`Marking h${node.level} "${node.content}" with warning icon (direct warning)`);
+            item.iconPath = new vscode.ThemeIcon('warning');
+        }
+        else if (hasAnyWarnings) {
+            // 子孫に警告がある場合も警告アイコン
+            console.log(`Marking h${node.level} "${node.content}" with warning icon (child warnings)`);
             item.iconPath = new vscode.ThemeIcon('warning');
         }
         else {

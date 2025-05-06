@@ -6,7 +6,8 @@
       "ES2020"
     ],
     "sourceMap": true,
-    "rootDir": "src",
+    "rootDir": ".",
+    "outDir": "out",
     "strict": true,   /* enable all strict type-checking options */
     /* Additional Checks */
     // "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
@@ -14,9 +15,14 @@
     // "noUnusedParameters": true,  /* Report errors on unused parameters. */
     "skipLibCheck": true /* Skip type checking of declaration files to avoid errors from third-party libraries */
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules",
     ".vscode-test",
-    "tests"
+    "tests",
+    "demo",
+    "out"
   ]
 }

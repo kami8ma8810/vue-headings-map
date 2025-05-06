@@ -28,6 +28,8 @@ function parseVueFile(filePath) {
             const scriptHeadings = extractHeadingsFromScript(script, scriptLineOffset);
             headings = [...headings, ...scriptHeadings];
         }
+        // 見出し要素の検証を追加実行（h1がないときにh2以降に警告を表示するため）
+        validateHeadingStructure(headings);
         return headings;
     }
     catch (err) {
@@ -36,6 +38,89 @@ function parseVueFile(filePath) {
     }
 }
 exports.parseVueFile = parseVueFile;
+/**
+ * 見出し構造全体を検証し、必要な警告を追加
+ */
+function validateHeadingStructure(headings) {
+    if (headings.length === 0) {
+        return;
+    }
+    console.log("\n==== VALIDATING HEADING STRUCTURE ====");
+    console.log(`Found ${headings.length} headings in document`);
+    // 見出しを行番号順にソート
+    const sortedHeadingsByLine = [...headings].sort((a, b) => a.line - b.line);
+    // 行番号付きですべての見出しを表示
+    sortedHeadingsByLine.forEach((h, idx) => {
+        console.log(`${idx + 1}. h${h.level} at line ${h.line}: "${h.content}"`);
+    });
+    // ファイル内のすべてのh1とh2以上の見出しを探す
+    const h1Headings = headings.filter(h => h.level === 1);
+    const h2PlusHeadings = headings.filter(h => h.level >= 2);
+    console.log(`Found ${h1Headings.length} h1 headings and ${h2PlusHeadings.length} h2+ headings`);
+    // まず、すべての警告をリセット（検証を繰り返し実行する場合に必要）
+    headings.forEach(h => {
+        h.hasWarning = false;
+        h.warningMessage = undefined;
+    });
+    // ステップ1: h1が存在しない場合の警告
+    if (h1Headings.length === 0) {
+        console.log("No h1 found - marking all h2+ headings with warning");
+        // h1がない場合、すべてのh2以降の見出しに警告を追加
+        h2PlusHeadings.forEach(heading => {
+            heading.hasWarning = true;
+            heading.warningMessage = "No h1 heading found in document";
+            console.log(`  Marked h${heading.level} "${heading.content}" with warning`);
+        });
+    }
+    else {
+        // h1がある場合、最初のh1の位置を特定
+        const firstH1 = sortedHeadingsByLine.find(h => h.level === 1);
+        if (firstH1) {
+            const firstH1Index = sortedHeadingsByLine.indexOf(firstH1);
+            console.log(`First h1 "${firstH1.content}" found at position ${firstH1Index + 1}`);
+            // h1の前にh2以上の見出しがある場合、それらの見出しに警告を表示
+            if (firstH1Index > 0) {
+                // h1より前に配置されている見出しを特定
+                const headingsBeforeH1 = sortedHeadingsByLine.slice(0, firstH1Index);
+                console.log(`Found ${headingsBeforeH1.length} headings before first h1`);
+                // それらの見出しに警告を追加
+                for (const heading of headingsBeforeH1) {
+                    if (heading.level >= 2) {
+                        heading.hasWarning = true;
+                        heading.warningMessage = "This heading appears before h1";
+                        console.log(`  Marked h${heading.level} "${heading.content}" with warning (before h1)`);
+                    }
+                }
+            }
+        }
+    }
+    // ステップ2: 逆順の見出しレベルをチェック (例: h3 → h2)
+    let lastLevel = 0;
+    for (const heading of sortedHeadingsByLine) {
+        // 逆順チェック: h3の後にh2が来るなど、高いレベルから低いレベルへの移行
+        if (lastLevel > heading.level && heading.level > 1) {
+            heading.hasWarning = true;
+            heading.warningMessage = `Heading level decreased from h${lastLevel} to h${heading.level}`;
+            console.log(`  Marked h${heading.level} "${heading.content}" with warning (out of order)`);
+        }
+        // レベルスキップのチェック (例: h2 → h4)
+        if (lastLevel > 0 && heading.level > lastLevel + 1) {
+            heading.hasWarning = true;
+            heading.warningMessage = `Heading level skipped from h${lastLevel} to h${heading.level}`;
+            console.log(`  Marked h${heading.level} "${heading.content}" with warning (level skip)`);
+        }
+        lastLevel = heading.level;
+    }
+    // 最終結果をログ出力
+    console.log("\n==== FINAL HEADING VALIDATION RESULTS ====");
+    headings.forEach(h => {
+        const warningStatus = h.hasWarning
+            ? `WARNING: ${h.warningMessage}`
+            : "OK";
+        console.log(`h${h.level} "${h.content}" - ${warningStatus}`);
+    });
+    console.log("====================================\n");
+}
 /**
  * コンテンツ内の特定位置までの行数を計算
  */
@@ -242,6 +327,12 @@ function checkHeadingLevelValidity(currentLevel, lastLevel) {
     // h2以降の見出しが登場した後にh1が来た場合の逆方向チェック
     // 既にlastLevelが2以上（h2以降の見出しが既に出現）で、currentLevelが1（h1）の場合
     if (lastLevel >= 2 && currentLevel === 1) {
+        return true;
+    }
+    // 逆順の見出しレベルをチェック（例：h3の後にh2）
+    // より大きな番号の見出し（h3、h4など）の後に、より小さな番号の見出し（h2、h3など）が来た場合で、
+    // かつ両者が1（h1）でない場合
+    if (lastLevel > currentLevel && currentLevel > 1) {
         return true;
     }
     // レベルのスキップをチェック（例：h2の後にh4）（設定に基づいて判断）
